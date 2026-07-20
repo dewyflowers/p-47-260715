@@ -24,18 +24,18 @@ public class App {
             else if(cmd.equals("목록")){
                 actionList();
             }
-            else if(cmd.startsWith("삭제?id=")){
+            else if(cmd.startsWith("삭제")){
                 try {
-                    int targetId = Integer.parseInt(cmd.substring("삭제?id=".length()).trim());
+                    int targetId = Integer.parseInt(cmd.substring(cmd.indexOf("=") + 1).trim());
                     actionDelete(targetId);
                 }
                 catch (NumberFormatException e) {
                     System.out.println("명언 번호는 숫자로 입력해주세요.");
                 }
             }
-            else if(cmd.startsWith("수정?id=")){
+            else if(cmd.startsWith("수정")){
                 try {
-                    int targetId = Integer.parseInt(cmd.substring("수정?id=".length()).trim());
+                    int targetId = Integer.parseInt(cmd.substring(cmd.indexOf("=") + 1).trim());
                     modify(targetId);
                 }
                 catch (NumberFormatException e) {
@@ -93,10 +93,10 @@ public class App {
         for(int i = 0; i < wiseList.size(); ++i) {
             if (wiseList.get(i).getId() == targetId) {
                 Wise wise = wiseList.get(i);
-                System.out.print("명언(기존) : " + wise.getContent() + "\n");
+                System.out.println("명언(기존) : %s".formatted(wise.getContent()));
                 System.out.print("명언 : ");
                 wise.setContent(sc.nextLine());
-                System.out.print("작가(기존) : " + wise.getAuthor() + "\n");
+                System.out.println("작가(기존) : %s".formatted(wise.getAuthor()));
                 System.out.print("작가 : ");
                 wise.setAuthor(sc.nextLine());
                 return;
