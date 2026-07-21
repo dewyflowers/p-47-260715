@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class App {
     private final Scanner sc = new Scanner(System.in);
@@ -25,22 +26,10 @@ public class App {
                 actionList();
             }
             else if(cmd.startsWith("삭제")){
-                try {
-                    int targetId = Integer.parseInt(cmd.substring(cmd.indexOf("=") + 1).trim());
-                    actionDelete(targetId);
-                }
-                catch (NumberFormatException e) {
-                    System.out.println("명언 번호는 숫자로 입력해주세요.");
-                }
+                actionDelete(cmd);
             }
             else if(cmd.startsWith("수정")){
-                try {
-                    int targetId = Integer.parseInt(cmd.substring(cmd.indexOf("=") + 1).trim());
-                    modify(targetId);
-                }
-                catch (NumberFormatException e) {
-                    System.out.println("명언 번호는 숫자로 입력해주세요.");
-                }
+                actionModify(cmd);
             }
             else{
                 System.out.println("잘못된 명령입니다.");
@@ -78,21 +67,34 @@ public class App {
         }
     }
 
-    private void actionDelete(int targetId){
-        for(int i = 0; i < wiseList.size(); ++i) {
-            if (wiseList.get(i).getId() == targetId) {
-                wiseList.remove(i);
-                System.out.printf("%d번 명언이 삭제되었습니다.\n", targetId);
-                return;
+    private void actionDelete(String cmd) {
+        try {
+            int targetId = Integer.parseInt(cmd.substring(cmd.indexOf("=") + 1).trim());
+
+//            int targetIndex = findIndexById(targetId);
+//            if (targetIndex != -1) {
+//                wiseList.remove(targetIndex);
+//                System.out.printf("%d번 명언이 삭제되었습니다.\n", targetId);
+//                return;
+//            } else {
+//                System.out.printf("%d번 명언은 존재하지 않습니다.\n", targetId);
+
+            boolean rst = wiseList.removeIf(wise -> wise.getId() == targetId);
+            if(!rst){
+                System.out.printf("%d번 명언은 존재하지 않습니다.\n", targetId);
             }
+        } catch (NumberFormatException e) {
+            System.out.println("명언 번호는 숫자로 입력해주세요.");
         }
-        System.out.printf("%d번 명언은 존재하지 않습니다.\n", targetId);
+
     }
 
-    private void modify(int targetId){
-        for(int i = 0; i < wiseList.size(); ++i) {
-            if (wiseList.get(i).getId() == targetId) {
-                Wise wise = wiseList.get(i);
+    private void actionModify(String cmd){
+        try {
+            int targetId = Integer.parseInt(cmd.substring(cmd.indexOf("=") + 1).trim());
+            int targetIndex = findIndexById(targetId);
+            if(targetIndex != -1) {
+                Wise wise = wiseList.get(targetIndex);
                 System.out.println("명언(기존) : %s".formatted(wise.getContent()));
                 System.out.print("명언 : ");
                 wise.setContent(sc.nextLine());
@@ -101,8 +103,29 @@ public class App {
                 wise.setAuthor(sc.nextLine());
                 return;
             }
+            else{
+                System.out.printf("%d번 명언은 존재하지 않습니다.\n", targetId);
+            }
         }
-            System.out.printf("%d번 명언은 존재하지 않습니다.\n", targetId);
+        catch (NumberFormatException e) {
+            System.out.println("명언 번호는 숫자로 입력해주세요.");
+        }
     }
 
+    private int findIndexById(int id){
+        return IntStream.range(0, wiseList.size())
+                .filter((int i) -> {
+                    return wiseList.get(i).getId() == id;
+                })
+                .findFirst()
+                .orElse(-1);
+
+        //        for(int i = 0; i < wiseList.size(); ++i) {
+//            if (wiseList.get(i).getId() == id) {
+//                return i;
+//            }
+//        }
+//
+//        return -1;
+    }
 }
