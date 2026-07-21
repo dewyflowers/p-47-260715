@@ -1,8 +1,42 @@
 public class RqTest {
 
     public static void main(String[] args){
-        testActionName();
-        testGetParam();
+        //testActionName();
+        //testGetParam();
+
+        //testGetParamEx();
+        testGetParamEx2();
+        testGetParamAsInt();
+    }
+
+    public static void testGetParamAsInt(){
+        Rq rq1 = new Rq("삭제?id=3");
+        int id1 = rq1.getParamAsInt("id", -1); // 3
+        System.out.println(id1);
+
+        Rq rq2 = new Rq("삭제?id=");
+        int id2 = rq2.getParamAsInt("id", -1); // -1
+        System.out.println(id2);
+    }
+
+    public static void testGetParamEx3(){
+        Rq rq = new Rq("목록?searchKeyword=&keywordkkk");
+        String searchKeyword = rq.getParam("searchKeyword", "");    // ""
+        String keyword = rq.getParam("keyword", "");    // ""
+        System.out.println(searchKeyword);  // ""
+        System.out.println(keyword);  // "kkk"
+    }
+
+    public static void testGetParamEx2(){
+        Rq rq = new Rq("목록?searchKeyword=");
+        String searchKeyword = rq.getParam("searchKeyword", "origin");    // "origin"
+        System.out.println(searchKeyword);  // "origin"
+    }
+
+    public static void testGetParamEx() {
+        Rq rq = new Rq("목록?");
+        String searchKeyword = rq.getParam("searchKeyword", "");    // ""
+        System.out.println(searchKeyword);  // ""
     }
 
     public static void testGetParam(){
